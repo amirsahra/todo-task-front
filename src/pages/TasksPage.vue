@@ -1,10 +1,12 @@
 <script setup>
-import {onMounted} from "vue";
+import {onMounted, ref} from "vue";
 import {allTasks} from "@/http/task-api.js";
+
+const tasks = ref([])
 
 onMounted(async () => {
   const {data} = await allTasks()
-  console.log(data)
+  tasks.value = data.data.tasks
 })
 
 </script>
@@ -22,14 +24,14 @@ onMounted(async () => {
           <!-- List of tasks -->
           <div class="card mt-2">
             <ul class="list-group list-group-flush">
-              <li class="list-group-item py-3">
+              <li class="list-group-item py-3" v-for="task in tasks" :key="task.id">
                 <div class="d-flex justify-content-start align-items-center">
                   <input class="form-check-input mt-0 completed" type="checkbox"/>
                   <div class="ms-2 flex-grow-1" title="Double click the text to edit or remove">
                     <!-- <div class="relative">
                         <input class="editable-task" type="text" />
                     </div> -->
-                    <span>My First task</span>
+                    <span>{{ task.name}}</span>
                   </div>
                   <div class="task-date">24 Feb 12:00</div>
                 </div>

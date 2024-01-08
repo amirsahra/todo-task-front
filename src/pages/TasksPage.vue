@@ -28,10 +28,6 @@ const  showCompletedTasks = ref(false)
       <div class="row">
         <div class="col-md-8 offset-md-2">
           <!-- Add new Task -->
-          <div class="relative">
-            <input type="text" class="form-control form-control-lg padding-right-lg"
-                   placeholder="+ Add new task. Press enter to save."/>
-          </div>
 
           <Tasks :tasks="uncompletedTasks"/>
           <Tasks :tasks="completedTasks" :show="completedTasksIsVisible && showCompletedTasks" />

@@ -1,7 +1,8 @@
 <script setup>
 import {computed, onMounted, ref} from "vue";
-import {allTasks} from "@/http/task-api.js";
+import {allTasks, createTask} from "@/http/task-api.js";
 import Tasks from "@/components/tasks/Tasks.vue";
+import NewTask from "@/components/tasks/NewTask.vue";
 
 const tasks = ref([])
 
@@ -16,9 +17,14 @@ const showToggleCompletedBtn = computed(
     () => uncompletedTasks.value.length > 0 && completedTasks.value.length > 0
 )
 const completedTasksIsVisible = computed(
-    () => uncompletedTasks.value.length === 0 ||  uncompletedTasks.value.length > 0
+    () => uncompletedTasks.value.length === 0 || uncompletedTasks.value.length > 0
 )
-const  showCompletedTasks = ref(false)
+const showCompletedTasks = ref(false)
+
+const handleAddedTask = async (newTask) => {
+  const {data: createdTask} = await createTask(newTask)
+  tasks.value.unshift(createdTask.data)
+}
 
 </script>
 
@@ -28,9 +34,9 @@ const  showCompletedTasks = ref(false)
       <div class="row">
         <div class="col-md-8 offset-md-2">
           <!-- Add new Task -->
-
+          <NewTask @added="handleAddedTask"/>
           <Tasks :tasks="uncompletedTasks"/>
-          <Tasks :tasks="completedTasks" :show="completedTasksIsVisible && showCompletedTasks" />
+          <Tasks :tasks="completedTasks" :show="completedTasksIsVisible && showCompletedTasks"/>
           <div class="text-center my-3" v-show="showToggleCompletedBtn">
             <button type="button" class="btn btn-outline-info btn-sm"
                     @click="$event => showCompletedTasks = !showCompletedTasks">
